@@ -3,9 +3,16 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { Provider } from 'react-redux'
+import Home from './pages/Home.jsx'
 import store from './store/store.js'
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AuthLayout } from './components/index.js'
+import AddPost from "./pages/AddPost";
+import Signup from './pages/Signup'
+import EditPost from "./pages/EditPost";
+import Post from "./pages/Post";
+import AllPosts from "./pages/AllPosts";
+import Login from './pages/Login'
 
 const router = createBrowserRouter([
   {
@@ -70,6 +77,6 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <App />
+    <RouterProvider router={router}/>
   </Provider>,
 )
