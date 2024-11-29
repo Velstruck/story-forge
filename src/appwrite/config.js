@@ -3,29 +3,30 @@ import { Client, ID, Databases, Storage, Query } from 'appwrite';
 
 export class Service {
     client = new Client();
-    databses;
+    databases;
     bucket;
 
     constructor() {
         this.client
             .setEndpoint(conf.appwriteUrl)
             .setProject(conf.appwriteProjectId);
-        this.databses = new Databases(this.client);
+        this.databases = new Databases(this.client);
         this.bucket = new Storage(this.client);
     }
 
     async createPost({ title, slug, content, featuredImage, status, userId }) {
+        console.log({ title, slug, content, featuredImage, status, userId });
         try {
-            return await this.databses.createDocument(
+            return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
                 slug,
                 {
                     title,
                     content,
-                    featuredImage,
+                    featuredImage: featuredImage,
                     status,
-                    userId,
+                    userId: userId,
                 }
             )
         } catch (error) {
@@ -36,7 +37,7 @@ export class Service {
 
     async updatePost(slug, { title, content, featuredImage, status }) {
         try {
-            return await this.databses.updateDocument(
+            return await this.databases.updateDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
                 slug,
@@ -55,7 +56,7 @@ export class Service {
 
     async deletePost(slug){
         try {
-            await this.databses.deleteDocument(
+            await this.databases.deleteDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
                 slug
@@ -69,7 +70,7 @@ export class Service {
 
     async getPost(slug) {
         try {
-            return await this.databses.getDocument(
+            return await this.databases.getDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
                 slug
@@ -82,7 +83,7 @@ export class Service {
 
     async getPosts(queries = [Query.equal('status', 'active')]) {
         try {
-            return await this.databses.listDocuments(
+            return await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
                 queries
