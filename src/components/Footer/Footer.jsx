@@ -11,7 +11,7 @@ function Footer() {
                         <div className="flex h-full flex-col justify-between">
                             <div className=" mb-4 inline-flex items-center">
                             <Link to="/" target='_blank'>
-                                <Logo width="200px" className='rounded-lg hover:brightness-90' src='src/assets/story_forge_2.png'/>
+                            <img className="" src={"./static/images/story_forge.png"} alt="logo" />
                             </Link>
                             </div>
                             <div>

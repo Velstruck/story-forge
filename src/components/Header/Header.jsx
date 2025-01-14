@@ -42,7 +42,7 @@ function Header() {
         <nav className='flex '>
           <div className='mr-4'>
             <Link to="/">
-              <Logo width='125px' className='hover:brightness-90' />
+              <img className="max-w-24 max-h-10" src={"./static/images/story_forge.png"} alt="logo" />
             </Link>
           </div>
           <ul className='flex ml-auto'>
