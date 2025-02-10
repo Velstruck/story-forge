@@ -44,6 +44,9 @@ export default function PostForm({ post }) {
 
                 if (dbPost) {
                     navigate(`/post/${dbPost.$id}`);
+                } else {
+                    console.error("Failed to create post");
+                    alert("Failed to create post. Please try again.");
                 }
             }
         }
