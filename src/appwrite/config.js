@@ -15,9 +15,16 @@ export class Service {
     }
 
     async createPost({ title, slug, content, featuredImage, status, userId }) {
-        console.log({ title, slug, content, featuredImage, status, userId });
         try {
-            return await this.databases.createDocument(
+            // If no slug is provided, generate one from the title
+            if (!slug) {
+                slug = title
+                    .toLowerCase()
+                    .replace(/[^a-zA-Z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '') + '-' + ID.unique();
+            }
+
+            const response = await this.databases.createDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
                 slug,
@@ -28,16 +35,25 @@ export class Service {
                     status,
                     userId: userId,
                 }
-            )
+            );
+
+            if (!response) {
+                throw new Error('Failed to create post');
+            }
+
+            return response;
         } catch (error) {
             console.log("Appwrite service :: createPost :: error", error);
-            return false;
+            if (error.message.includes("content") && error.message.includes("500")) {
+                throw new Error("Content is too long. Please keep it under 500 characters.");
+            }
+            throw error;
         }
     }
 
     async updatePost(slug, { title, content, featuredImage, status }) {
         try {
-            return await this.databases.updateDocument(
+            const response = await this.databases.updateDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
                 slug,
@@ -47,10 +63,12 @@ export class Service {
                     featuredImage,
                     status
                 }
-            )
+            );
+            return response;
         }
         catch (error) {
             console.log("Appwrite service :: updatePost :: error", error);
+            return false;
         }
     }
 
@@ -97,11 +115,15 @@ export class Service {
     // File upload services
     async uploadFile(file) {
         try {
-            return await this.bucket.createFile(
+            const response = await this.bucket.createFile(
                 conf.appwriteBucketId,
                 ID.unique(),
                 file
-            )
+            );
+            if (!response || !response.$id) {
+                throw new Error("Failed to upload file");
+            }
+            return response;
         } catch (error) {
             console.log("Appwrite service :: uploadFile :: error", error);
             return false;
